@@ -1,8 +1,8 @@
 package com.soz.carmaster.service;
 
 import com.soz.carmaster.data.User;
+import com.soz.carmaster.data.UserMapper;
 import com.soz.carmaster.dto.RegisterUserDto;
-import com.soz.carmaster.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -26,7 +26,11 @@ public class UserServiceImpl implements UserService {
                 .enabled(true)
                 .build();
 
-        return userRepository.save(user);
+        int result = userMapper.save(user);
+        if (result > 0) {
+            return user;
+        }
+        return null;
     }
 
     @Override

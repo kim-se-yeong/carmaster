@@ -1,13 +1,14 @@
 package com.soz.carmaster.config;
 
 import com.soz.carmaster.data.User;
-import com.soz.carmaster.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.soz.carmaster.data.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.List;
 
 /**
  * 스프링 시큐리티에서 기본적으로 인증할 때 사용하는 USER, AUTHORITIES 테이블 대신,
@@ -19,16 +20,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByName(username);
-        log.info("user {}", user);
-        if (user == null) {
+        List<User> users = userMapper.findByName(username);
+        if (users.isEmpty()) {
             throw new UsernameNotFoundException("No user : " + username);
         }
+
+        User user = users.get(0);
         return org.springframework.security.core.userdetails.User.withUsername(user.getName())
                 .password(user.getPassword())
                 .disabled(!user.isEnabled())

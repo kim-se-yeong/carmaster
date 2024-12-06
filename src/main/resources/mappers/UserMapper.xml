@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soz.carmaster.data.UserMapper">
+    <select id="findByName" resultType="com.soz.carmaster.data.User">
+        SELECT * FROM user WHERE name = #{name}
+    </select>
+    <insert id="save" parameterType="com.soz.carmaster.data.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user(name, password, email, enabled) VALUES(#{name}, #{password}, #{email}, #{enabled})
+    </insert>
+</mapper>
